@@ -14,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OrsTargetInterface {
 
 
 
@@ -37,38 +38,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
 
-        String url = "https://httpbin.org/post";
-
-        JSONObject bspstartkoordinate = new JSONObject();
-        try {
-            bspstartkoordinate.put("X", "asdfasfe");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        String profilCar = "driving-car";
+        String profilWalking = "foot-walking";
+        String profilBike = "cycling-regular";
 
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, url, bspstartkoordinate, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Test Main", response.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-
-// Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+     new OrsRequest(profilCar, null, null, this);
 
 
 
-        
+
 
     }
 
@@ -107,5 +86,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.googleMap = googleMap;
 
         getLocationPermission();
+    }
+
+    @Override
+    public void processOrsResult(JSONObject response) {
+        Log.i("processOrsResult", response.toString());
+    }
+
+    @Override
+    public void processOrsError(VolleyError error) {
+        Log.i("processOrsError", error.toString());
+    }
+
+    @Override
+    public Context appContext() {
+        return this.getApplicationContext();
     }
 }
