@@ -47,11 +47,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <fragment
             android:id="@+id/maps"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="wrap_content"
-            android:layout_height="500dp"/>
+            android:layout_height="500dp"
+            tools:layout="@layout/support_simple_spinner_dropdown_item" />
 
 
 
