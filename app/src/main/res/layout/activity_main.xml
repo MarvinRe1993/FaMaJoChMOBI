@@ -13,18 +13,21 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/edt_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Startpunkt auswählen">
         </EditText>
 
         <EditText
+            android:id="@+id/edt_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Zielpunkt auswählen">
         </EditText>
 
         <Button
+            android:id="@+id/btn_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Suche starten"
@@ -42,27 +45,15 @@
         android:orientation="vertical">
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Karte"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
         <fragment
             android:id="@+id/maps"
             android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="500dp"
-            tools:layout="@layout/support_simple_spinner_dropdown_item" />
-
-
-
+            android:layout_width="match_parent"
+            android:layout_height="500dp"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -71,44 +62,23 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:gravity="top"
-                android:backgroundTint="@color/white"
-                android:drawableBottom="@drawable/ic_fahrrad"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="180dp"
-                android:text="Zeile für Buttons"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
+                android:id="@+id/walk"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="top"
                 android:backgroundTint="@color/white"
-                android:drawableBottom="@drawable/ic_car"
-                />
+                android:drawableBottom="@drawable/ic_walk" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="180dp"
+                android:id="@+id/txt_walk"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:text="Zeile für Buttons"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -116,28 +86,59 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
 
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
 
             <Button
-                android:layout_width="wrap_content"
+                android:id="@+id/btn_fahrrad"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="top"
                 android:backgroundTint="@color/white"
-                android:drawableBottom="@drawable/ic_walk"
-                />
+                android:drawableBottom="@drawable/ic_fahrrad" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="180dp"
+                android:id="@+id/txt_fahrrad"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:text="Zeile für Buttons"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btn_car"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="top"
+                android:backgroundTint="@color/white"
+                android:drawableBottom="@drawable/ic_car" />
+
+            <TextView
+                android:id="@+id/txt_car"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:text="Zeile für Buttons"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+
+
 
 
 
