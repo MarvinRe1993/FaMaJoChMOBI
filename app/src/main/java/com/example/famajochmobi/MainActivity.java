@@ -11,6 +11,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -19,6 +21,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +31,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OrsTargetInterface {
 
 
-
+    LatLng startpoint;
     GoogleMap googleMap;
 
     @Override
@@ -86,6 +90,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         this.googleMap = googleMap;
 
         getLocationPermission();
+
+
+        // Long Click für Koordinaten
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng startpoint) {
+                Toast.makeText(getApplicationContext(), startpoint.toString(), Toast.LENGTH_SHORT).show();
+
+                //  String message = edt_start.getText().toString();
+
+                //Log.d("TAG", message);
+                Log.i("Startpunkt", String.valueOf(startpoint));
+
+
+            }
+        });
     }
 
     @Override
