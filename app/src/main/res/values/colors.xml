@@ -11,5 +11,7 @@
     <color name="Fahrrad">#008000</color>
     <color name="Auto">#FF0000</color>
     <color name="Suche_Button">#008000</color>
+    <color name="Start_Button">#008000</color>
+    <color name="Ziel_Button">#008000</color>
 
 </resources>

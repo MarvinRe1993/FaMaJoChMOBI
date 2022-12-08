@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Start"
-                android:backgroundTint="@color/Suche_Button"
+                android:backgroundTint="@color/Start_Button"
                 android:layout_weight="1">
             </Button>
 
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Suche starten"
-            android:backgroundTint="@color/Suche_Button">
+            android:backgroundTint="@color/Ziel_Button">
         </Button>
 
 
