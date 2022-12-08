@@ -5,26 +5,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:layout_margin="8dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_weight="1">
 
-        <EditText
-            android:id="@+id/edt_start"
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Startpunkt auswählen">
-        </EditText>
+            android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/edt_end"
+        <TextView
+            android:id="@+id/txt_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Zielpunkt auswählen">
-        </EditText>
+            android:hint="Startpunkt auswählen"
+            android:layout_weight="50">
+        </TextView>
+
+
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"
+                android:backgroundTint="@color/Suche_Button"
+                android:layout_weight="1">
+            </Button>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/txt_end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Zielpunkt auswählen"
+            android:layout_weight="50">
+        </TextView>
+
+        <Button
+            android:id="@+id/btn_ziel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ziel"
+            android:backgroundTint="@color/Suche_Button"
+            android:layout_weight="1">
+        </Button>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
         <Button
             android:id="@+id/btn_search"
@@ -42,14 +79,15 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_weight="40">
 
 
         <fragment
             android:id="@+id/maps"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="500dp"/>
+            android:layout_height="match_parent"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -59,7 +97,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -79,7 +118,8 @@
                 android:id="@+id/txt_walk"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:text="Zeile für Buttons"
+                android:text="Info Fußgänger"
+                android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +145,8 @@
                 android:id="@+id/txt_fahrrad"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:text="Zeile für Buttons"
+                android:text="Info Fahrrad"
+                android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -131,15 +172,13 @@
                 android:id="@+id/txt_car"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:text="Zeile für Buttons"
+                android:text="Info Auto"
+                android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
-
-
-
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>
