@@ -4,15 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -21,17 +17,19 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OrsTargetInterface {
 
 
-    LatLng startpoint;
+    LatLng start;
+    LatLng target;
     GoogleMap googleMap;
 
     @Override
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.maps);
         mapFragment.getMapAsync(this);
 
-
+/*
         String profilCar = "driving-car";
         String profilWalking = "foot-walking";
         String profilBike = "cycling-regular";
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
      new OrsRequest(profilCar, null, null, this);
 
 
-
+*/
 
 
     }
@@ -91,23 +89,106 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getLocationPermission();
 
+        // Deklarieren der Start und Ziel und Suche Buttons
+        Button btnStart = this.findViewById(R.id.btn_start);
+        Button btnZiel = this.findViewById(R.id.btn_ziel);
+        Button btnSearch = this.findViewById(R.id.btn_search);
 
-        // Long Click für Koordinaten
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
+        // Klick auf Start Button
+        btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onMapClick(LatLng startpoint) {
-                Toast.makeText(getApplicationContext(), startpoint.toString(), Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Startpunkt auf der Karte wählen!", Toast.LENGTH_LONG).show();
 
-                //  String message = edt_start.getText().toString();
+                // Long Click für Koordinaten
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
-                //Log.d("TAG", message);
-                Log.i("Startpunkt", String.valueOf(startpoint));
+                    @Override
+                    public void onMapClick(LatLng start) {
+                        Toast.makeText(getApplicationContext(), start.toString(), Toast.LENGTH_SHORT).show();
+                        //  String message = edt_start.getText().toString();
+
+                        //Log.d("TAG", message);
+                        Log.i("Startpunkt", String.valueOf(start));
+
+                        // Übergabe an startPos
+                        OrsRequest.startPos = start;
+
+                        // Ausgabe der Koordinaten für Textfeld
+                        TextView textView = findViewById(R.id.txt_start);
+                        textView.setText(String.valueOf(OrsRequest.startPos.latitude) + " " + String.valueOf(OrsRequest.startPos.longitude));
+
+                    }
+                });
+
+            }
+        });
+
+
+        // Klick auf Ziel Button
+        btnZiel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Zielpunkt auf der Karte wählen!", Toast.LENGTH_LONG).show();
+
+                // Long Click für Koordinaten
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                    @Override
+                    public void onMapClick(LatLng target) {
+                        Toast.makeText(getApplicationContext(), target.toString(), Toast.LENGTH_SHORT).show();
+                        //  String message = edt_start.getText().toString();
+
+                        //Log.d("TAG", message);
+                        Log.i("Zielpunkt", String.valueOf(target));
+
+                        // Übergabe an startPos
+                        OrsRequest.targetPos = target;
+
+                        // Ausgabe der Koordinaten für Textfeld
+                        TextView textView = findViewById(R.id.txt_target);
+                        textView.setText(String.valueOf(OrsRequest.targetPos.latitude) + " " + String.valueOf(OrsRequest.targetPos.longitude));
+
+                    }
+                });
+            }
+        });
+
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String profilCar = "driving-car";
+                String profilWalking = "foot-walking";
+                String profilBike = "cycling-regular";
+
+
+                Log.i("Startpunkt_Suche", String.valueOf(start));
+                Log.i("Zielpunkt_Suche", String.valueOf(target));
+
+                Log.i("Startpunkt_Suche", String.valueOf(OrsRequest.startPos));
+                Log.i("Zielpunkt_Suche", String.valueOf(OrsRequest.targetPos));
+
+
+                // Möglicherweise ist hier nicht alles richtig eingetragen
+                new OrsRequest(profilCar, OrsRequest.startPos, OrsRequest.targetPos, OrsRequest.responseTarget);
 
 
             }
         });
+
+
+
     }
+
+
+
+
+
+
+
 
     @Override
     public void processOrsResult(JSONObject response) {

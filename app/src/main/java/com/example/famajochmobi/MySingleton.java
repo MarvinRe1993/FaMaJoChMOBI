@@ -2,6 +2,8 @@ package com.example.famajochmobi;
 
 
 import android.content.Context;
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -19,6 +21,7 @@ public class MySingleton {
     public static synchronized MySingleton getInstance(Context context) {
         if (instance == null) {
             instance = new MySingleton(context);
+            Log.d("RequestQueue", "Instance");
         }
         return instance;
     }
@@ -28,12 +31,15 @@ public class MySingleton {
             // getApplicationContext() is key, it keeps you from leaking the
             // Activity or BroadcastReceiver if someone passes one in.
             requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
+            Log.d("RequestQueue", "erfolgreich");
         }
         return requestQueue;
+
     }
 
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
+        Log.d("addToRequestQueue","addToRequestQueue");
     }
 
 
