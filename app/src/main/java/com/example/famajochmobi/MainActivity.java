@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OrsTargetInterface {
 
@@ -156,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
+        MainActivity this2 = this;
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                 // Möglicherweise ist hier nicht alles richtig eingetragen
-                new OrsRequest(profilCar, OrsRequest.startPos, OrsRequest.targetPos, OrsRequest.responseTarget);
+                new OrsRequest(profilCar, OrsRequest.startPos, OrsRequest.targetPos, this2);
 
 
             }
@@ -198,6 +201,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void processOrsError(VolleyError error) {
         Log.i("processOrsError", error.toString());
+        try {
+            Log.i("processOrsError", new String(error.networkResponse.data, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

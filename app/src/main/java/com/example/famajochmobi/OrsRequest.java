@@ -48,8 +48,8 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
         JSONArray targetKordArray = new JSONArray();
 
         try {
-            startKordArray.put(startPos.latitude);
             startKordArray.put(startPos.longitude);
+            startKordArray.put(startPos.latitude);
             //startKordArray.put(8.681495);
             //startKordArray.put(49.41461);
         } catch (JSONException e) {
@@ -57,8 +57,8 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
         }
 
         try {
-            targetKordArray.put(targetPos.latitude);
             targetKordArray.put(targetPos.longitude);
+            targetKordArray.put(targetPos.latitude);
             //targetKordArray.put(8.686507);
             //targetKordArray.put(49.41943);
         } catch (JSONException e) {
