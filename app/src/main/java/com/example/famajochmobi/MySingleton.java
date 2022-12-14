@@ -16,6 +16,7 @@ public class MySingleton {
     private MySingleton(Context context) {
         ctx = context;
         requestQueue = getRequestQueue();
+        Log.d("RequestQueue", "Context");
     }
 
     public static synchronized MySingleton getInstance(Context context) {
@@ -37,9 +38,10 @@ public class MySingleton {
 
     }
 
-    public <T> void addToRequestQueue(Request<T> req) {
-        getRequestQueue().add(req);
-        Log.d("addToRequestQueue","addToRequestQueue");
+    public <T> void addToRequestQueue(Request<T> request) {
+        Log.d("addToRequestQueue","addToRequestQueue_vor");
+        getRequestQueue().add(request);
+        Log.d("addToRequestQueue","addToRequestQueue_nach");
     }
 
 

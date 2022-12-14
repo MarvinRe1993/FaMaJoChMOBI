@@ -40,28 +40,28 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
     }
 
 
-    public void doRequest(){
+    public void doRequest() {
         JSONObject orsParameter = new JSONObject();
 
         JSONArray KordArray = new JSONArray();
         JSONArray startKordArray = new JSONArray();
         JSONArray targetKordArray = new JSONArray();
 
-        try{
+        try {
             startKordArray.put(startPos.latitude);
             startKordArray.put(startPos.longitude);
             //startKordArray.put(8.681495);
             //startKordArray.put(49.41461);
-        } catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        try{
+        try {
             targetKordArray.put(targetPos.latitude);
             targetKordArray.put(targetPos.longitude);
             //targetKordArray.put(8.686507);
             //targetKordArray.put(49.41943);
-        } catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         KordArray.put(startKordArray);
@@ -69,9 +69,9 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
         //KordArray.put(startPos);
         //KordArray.put(targetPos);
 
-        Log.i("Profil",String.valueOf(profile));
-        Log.i("StartArray",String.valueOf(startKordArray));
-        Log.i("ZielArray",String.valueOf(targetKordArray));
+        Log.i("Profil", String.valueOf(profile));
+        Log.i("StartArray", String.valueOf(startKordArray));
+        Log.i("ZielArray", String.valueOf(targetKordArray));
         Log.i("Koordinaten Array", String.valueOf(KordArray));
 
 
@@ -89,7 +89,7 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
 
             alternativeRoutesObject.put("weight_factor", 1.4);
 
-        } catch (JSONException e){
+        } catch (JSONException e) {
 
         }
 
@@ -105,18 +105,19 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, url, orsParameter, response -> responseTarget.processOrsResult(response), error -> responseTarget.processOrsError(error)) {
-        @Override
-        public Map<String, String> getHeaders() throws AuthFailureError {
-            HashMap<String, String> superHeaders = new
-                    HashMap<>(super.getHeaders());
-            superHeaders.put("Authorization", api_key);
-            return Collections.unmodifiableMap(superHeaders);
-        }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> superHeaders = new
+                        HashMap<>(super.getHeaders());
+                superHeaders.put("Authorization", api_key);
+                return Collections.unmodifiableMap(superHeaders);
+            }
 
 
-    };
+        };
 
-    Log.i("Request Queue", String.valueOf(jsonObjectRequest));
+        Log.d("Json Response", String.valueOf(responseTarget));
+        Log.i("jsonObjectRequest", String.valueOf(jsonObjectRequest));
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(responseTarget.appContext()).addToRequestQueue(jsonObjectRequest);
