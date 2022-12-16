@@ -85,7 +85,7 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
 
             alternativeRoutesObject.put("share_factor", 0.5);
 
-            alternativeRoutesObject.put("target_count", 2);
+            alternativeRoutesObject.put("target_count", 3);
 
             alternativeRoutesObject.put("weight_factor", 1.4);
 
@@ -104,7 +104,7 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
 
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, url, orsParameter, response -> responseTarget.processOrsResult(response), error -> responseTarget.processOrsError(error)) {
+                (Request.Method.POST, url, orsParameter, response -> responseTarget.processOrsResult(profile, response), error -> responseTarget.processOrsError(profile, error)) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> superHeaders = new

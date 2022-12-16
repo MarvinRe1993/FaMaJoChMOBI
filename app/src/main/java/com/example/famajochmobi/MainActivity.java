@@ -14,6 +14,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,9 +23,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.maps.android.data.Layer;
+import com.google.maps.android.data.geojson.GeoJsonFeature;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonLineString;
+import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
+
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OrsTargetInterface {
@@ -33,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng start;
     LatLng target;
     GoogleMap googleMap;
+    String profilCar = "driving-car";
+    String profilWalking = "foot-walking";
+    String profilBike = "cycling-regular";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +54,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.maps);
         mapFragment.getMapAsync(this);
 
-/*
-        String profilCar = "driving-car";
-        String profilWalking = "foot-walking";
-        String profilBike = "cycling-regular";
 
-
-     new OrsRequest(profilCar, null, null, this);
-
-
-*/
 
 
     }
+
+
 
 
     // Standort wird ermittelt nach dem Klick auf den Button
@@ -95,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button btnStart = this.findViewById(R.id.btn_start);
         Button btnZiel = this.findViewById(R.id.btn_ziel);
         Button btnSearch = this.findViewById(R.id.btn_search);
+
+
 
 
         // Klick auf Start Button
@@ -163,9 +171,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
 
-                String profilCar = "driving-car";
-                String profilWalking = "foot-walking";
-                String profilBike = "cycling-regular";
+
 
 
                 Log.i("Startpunkt_Suche", String.valueOf(start));
@@ -177,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Möglicherweise ist hier nicht alles richtig eingetragen
                 new OrsRequest(profilCar, OrsRequest.startPos, OrsRequest.targetPos, this2);
+                new OrsRequest(profilWalking, OrsRequest.startPos, OrsRequest.targetPos, this2);
+                new OrsRequest(profilBike, OrsRequest.startPos, OrsRequest.targetPos, this2);
 
 
             }
@@ -194,12 +202,100 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     @Override
-    public void processOrsResult(JSONObject response) {
+    public void processOrsResult(String profile, JSONObject response) {
         Log.i("processOrsResult", response.toString());
+
+
+
+        GeoJsonLayer layer = new GeoJsonLayer(googleMap, response);
+
+        //layer.addLayerToMap();
+
+        double shortest_distance = 0;
+        GeoJsonFeature shortest_feature = null;
+
+
+
+
+        for(GeoJsonFeature feature : layer.getFeatures()){
+
+
+                if (feature.hasProperty("summary")) {
+                    String summary = feature.getProperty("summary").toString();
+
+                    double distance;
+                    double duration;
+
+                    try {
+                        JSONObject jsonSummary = new JSONObject(summary);
+
+                        distance = jsonSummary.getDouble("distance");
+
+                        Log.d("Distance", String.valueOf(distance));
+
+
+                        if(shortest_feature == null || distance < shortest_distance){
+                            shortest_distance = distance;
+                            shortest_feature = feature;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("Summary", summary);
+                }
+        }
+        Log.d("Shortest Distance", String.valueOf(shortest_distance));
+        //layer.addLayerToMap();
+
+
+
+        if(profile == profilCar) {
+            TextView textView = findViewById(R.id.txt_car);
+            textView.setText("Länge: " + String.valueOf(shortest_distance) + " m");
+
+
+
+            GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
+            bestLayer.addFeature(shortest_feature);
+
+            GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
+            lineStringStyle.setColor(R.color.Auto);
+            shortest_feature.setLineStringStyle(lineStringStyle);
+
+            bestLayer.addLayerToMap();
+        }
+
+        else if(profile == profilBike) {
+            GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
+            bestLayer.addFeature(shortest_feature);
+
+            GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
+            lineStringStyle.setColor(R.color.Fahrrad);
+            shortest_feature.setLineStringStyle(lineStringStyle);
+
+            bestLayer.addLayerToMap();
+        }
+
+        else if(profile == profilWalking) {
+            GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
+            bestLayer.addFeature(shortest_feature);
+
+            GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
+            lineStringStyle.setColor(R.color.Fuß);
+            shortest_feature.setLineStringStyle(lineStringStyle);
+
+            bestLayer.addLayerToMap();
+        }
+
+
+
+
     }
 
     @Override
-    public void processOrsError(VolleyError error) {
+    public void processOrsError(String profile, VolleyError error) {
         Log.i("processOrsError", error.toString());
         try {
             Log.i("processOrsError", new String(error.networkResponse.data, "utf-8"));
@@ -212,4 +308,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public Context appContext() {
         return this.getApplicationContext();
     }
+
+
+
+
+
+
+
 }

@@ -7,9 +7,9 @@ import com.android.volley.VolleyError;
 import org.json.JSONObject;
 
 public interface OrsTargetInterface {
-    void processOrsResult(JSONObject response);
+    void processOrsResult(String profile, JSONObject response);
 
-    void processOrsError(VolleyError error);
+    void processOrsError(String profile, VolleyError error);
 
     Context appContext();
 
