@@ -31,6 +31,7 @@ import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonLineString;
 import com.google.maps.android.data.geojson.GeoJsonLineStringStyle;
+import com.google.maps.android.data.geojson.GeoJsonPointStyle;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -45,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     GoogleMap googleMap;
     String profilCar = "driving-car";
     String profilWalking = "foot-walking";
-    String profilBike = "cycling-regular";
+    // cycling-regular gibt nicht immer 3 Routen zurück, deshalb cycling-road
+    //String profilBike = "cycling-regular";
+    String profilBike = "cycling-road";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     @Override
                     public void onMapClick(LatLng start) {
-                        Toast.makeText(getApplicationContext(), start.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), start.toString(), Toast.LENGTH_SHORT).show();
                         //  String message = edt_start.getText().toString();
 
                         //Log.d("TAG", message);
@@ -127,8 +130,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         // Ausgabe der Koordinaten für Textfeld
                         TextView textView = findViewById(R.id.txt_start);
-                        textView.setText(String.valueOf(OrsRequest.startPos.latitude) + " " + String.valueOf(OrsRequest.startPos.longitude));
-
+                        textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.startPos.latitude*100000)/100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.startPos.longitude*100000)/100000.0));
                     }
                 });
 
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     @Override
                     public void onMapClick(LatLng target) {
-                        Toast.makeText(getApplicationContext(), target.toString(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), target.toString(), Toast.LENGTH_SHORT).show();
                         //  String message = edt_start.getText().toString();
 
                         //Log.d("TAG", message);
@@ -158,10 +160,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         // Ausgabe der Koordinaten für Textfeld
                         TextView textView = findViewById(R.id.txt_target);
-                        textView.setText(String.valueOf(OrsRequest.targetPos.latitude) + " " + String.valueOf(OrsRequest.targetPos.longitude));
+                        textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.targetPos.latitude*100000)/100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.targetPos.longitude*100000)/100000.0));
 
                     }
                 });
+
             }
         });
 
@@ -172,26 +175,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
 
 
+                if (OrsRequest.startPos != null && OrsRequest.targetPos != null) {
+
+                    Log.i("Startpunkt_Suche", String.valueOf(start));
+                    Log.i("Zielpunkt_Suche", String.valueOf(target));
+
+                    Log.i("Startpunkt_Suche", String.valueOf(OrsRequest.startPos));
+                    Log.i("Zielpunkt_Suche", String.valueOf(OrsRequest.targetPos));
 
 
-                Log.i("Startpunkt_Suche", String.valueOf(start));
-                Log.i("Zielpunkt_Suche", String.valueOf(target));
-
-                Log.i("Startpunkt_Suche", String.valueOf(OrsRequest.startPos));
-                Log.i("Zielpunkt_Suche", String.valueOf(OrsRequest.targetPos));
-
-
-                // Möglicherweise ist hier nicht alles richtig eingetragen
-                new OrsRequest(profilCar, OrsRequest.startPos, OrsRequest.targetPos, this2);
-                new OrsRequest(profilWalking, OrsRequest.startPos, OrsRequest.targetPos, this2);
-                new OrsRequest(profilBike, OrsRequest.startPos, OrsRequest.targetPos, this2);
+                    // Möglicherweise ist hier nicht alles richtig eingetragen
+                    new OrsRequest(profilCar, OrsRequest.startPos, OrsRequest.targetPos, this2);
+                    new OrsRequest(profilWalking, OrsRequest.startPos, OrsRequest.targetPos, this2);
+                    new OrsRequest(profilBike, OrsRequest.startPos, OrsRequest.targetPos, this2);
 
 
+                }
+
+
+            else {
+                Log.i("Else", "Start und Ziel Koordinaten wählen");
+
+                // Hier ein Pop-Up Window oder Ähnliches einfügen!
             }
+
+        }
+
         });
-
-
-
     }
 
 
@@ -212,14 +222,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //layer.addLayerToMap();
 
         double shortest_distance = 0;
+        double duration_shortest_distance = 0;
         GeoJsonFeature shortest_feature = null;
 
 
 
 
         for(GeoJsonFeature feature : layer.getFeatures()){
-
-
                 if (feature.hasProperty("summary")) {
                     String summary = feature.getProperty("summary").toString();
 
@@ -230,30 +239,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         JSONObject jsonSummary = new JSONObject(summary);
 
                         distance = jsonSummary.getDouble("distance");
+                        duration = jsonSummary.getDouble("duration");
 
-                        Log.d("Distance", String.valueOf(distance));
+                        Log.d("Distance " + profile, String.valueOf(distance));
+                        Log.d("Dauer " + profile, String.valueOf(duration));
 
 
                         if(shortest_feature == null || distance < shortest_distance){
                             shortest_distance = distance;
                             shortest_feature = feature;
+                            duration_shortest_distance = duration;
                         }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    Log.d("Summary", summary);
+                    Log.d("Summary " + profile, summary);
                 }
         }
-        Log.d("Shortest Distance", String.valueOf(shortest_distance));
+        Log.d("Shortest Distance " + profile, String.valueOf(shortest_distance));
         //layer.addLayerToMap();
 
 
 
         if(profile == profilCar) {
             TextView textView = findViewById(R.id.txt_car);
-            textView.setText("Länge: " + String.valueOf(shortest_distance) + " m");
+            textView.setText("Info Auto\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
 
 
 
@@ -261,29 +273,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             bestLayer.addFeature(shortest_feature);
 
             GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-            lineStringStyle.setColor(R.color.Auto);
+            lineStringStyle.setColor(Color.RED);
             shortest_feature.setLineStringStyle(lineStringStyle);
 
             bestLayer.addLayerToMap();
         }
 
         else if(profile == profilBike) {
+            TextView textView = findViewById(R.id.txt_fahrrad);
+            textView.setText("Info Fahrrad\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
+
+
+
             GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
             bestLayer.addFeature(shortest_feature);
 
             GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-            lineStringStyle.setColor(R.color.Fahrrad);
+            lineStringStyle.setColor(Color.GREEN);
             shortest_feature.setLineStringStyle(lineStringStyle);
 
             bestLayer.addLayerToMap();
         }
 
         else if(profile == profilWalking) {
+            TextView textView = findViewById(R.id.txt_walk);
+            textView.setText("Info Fußgänger\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
+
+
+
             GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
             bestLayer.addFeature(shortest_feature);
 
             GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-            lineStringStyle.setColor(R.color.Fuß);
+            lineStringStyle.setColor(Color.BLUE);
             shortest_feature.setLineStringStyle(lineStringStyle);
 
             bestLayer.addLayerToMap();
