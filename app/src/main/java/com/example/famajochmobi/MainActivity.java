@@ -1,5 +1,6 @@
 package com.example.famajochmobi;
 
+import androidx.annotation.ColorLong;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -110,8 +111,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Klick auf Start Button
         btnStart.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                btnStart.setBackgroundColor(Color.parseColor(getString(R.color.Start_Ziel_pressed)));
                 Toast.makeText(getApplicationContext(), "Startpunkt auf der Karte wählen!", Toast.LENGTH_LONG).show();
 
                 // Long Click für Koordinaten
@@ -131,7 +134,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         // Ausgabe der Koordinaten für Textfeld
                         TextView textView = findViewById(R.id.txt_start);
                         textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.startPos.latitude*100000)/100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.startPos.longitude*100000)/100000.0));
+
+                        if(OrsRequest.startPos != null) {
+                            btnStart.setBackgroundColor(Color.parseColor(getString(R.color.Start_Button)));
+                        }
                     }
+
                 });
 
             }
@@ -140,8 +148,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Klick auf Ziel Button
         btnZiel.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                btnZiel.setBackgroundColor(Color.parseColor(getString(R.color.Start_Ziel_pressed)));
                 Toast.makeText(getApplicationContext(), "Zielpunkt auf der Karte wählen!", Toast.LENGTH_LONG).show();
 
                 // Long Click für Koordinaten
@@ -162,10 +172,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         TextView textView = findViewById(R.id.txt_target);
                         textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.targetPos.latitude*100000)/100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.targetPos.longitude*100000)/100000.0));
 
+                        if(OrsRequest.startPos != null) {
+                            btnZiel.setBackgroundColor(Color.parseColor(getString(R.color.Ziel_Button)));
+
+                        }
                     }
                 });
 
-            }
+              }
         });
 
 
