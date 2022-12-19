@@ -51,6 +51,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //String profilBike = "cycling-regular";
     String profilBike = "cycling-road";
 
+    // Variablen für Anfrageverwaltung
+    boolean start_input;
+    boolean ziel_input;
+    boolean input;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,34 +121,38 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                input = true;
+                start_input = false;
                 btnStart.setBackgroundColor(Color.parseColor(getString(R.color.Start_Ziel_pressed)));
                 Toast.makeText(getApplicationContext(), "Startpunkt auf der Karte wählen!", Toast.LENGTH_LONG).show();
 
+                if(input == true){
                 // Long Click für Koordinaten
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
                     @Override
                     public void onMapClick(LatLng start) {
-                        //Toast.makeText(getApplicationContext(), start.toString(), Toast.LENGTH_SHORT).show();
-                        //  String message = edt_start.getText().toString();
+                        if (start_input == false) {
+                            //Toast.makeText(getApplicationContext(), start.toString(), Toast.LENGTH_SHORT).show();
+                            //  String message = edt_start.getText().toString();
 
-                        //Log.d("TAG", message);
-                        Log.i("Startpunkt", String.valueOf(start));
+                            Log.i("Startpunkt", String.valueOf(start));
 
-                        // Übergabe an startPos
-                        OrsRequest.startPos = start;
+                            // Übergabe an startPos
+                            OrsRequest.startPos = start;
 
-                        // Ausgabe der Koordinaten für Textfeld
-                        TextView textView = findViewById(R.id.txt_start);
-                        textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.startPos.latitude*100000)/100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.startPos.longitude*100000)/100000.0));
+                            // Ausgabe der Koordinaten für Textfeld
+                            TextView textView = findViewById(R.id.txt_start);
+                            textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.startPos.latitude * 100000) / 100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.startPos.longitude * 100000) / 100000.0));
 
-                        if(OrsRequest.startPos != null) {
-                            btnStart.setBackgroundColor(Color.parseColor(getString(R.color.Start_Button)));
+                            if (OrsRequest.startPos != null) {
+                                btnStart.setBackgroundColor(Color.parseColor(getString(R.color.Start_Button)));
+                                start_input = true;
+                            }
                         }
                     }
-
                 });
-
+            }
             }
         });
 
@@ -151,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                input = true;
+                ziel_input = false;
                 btnZiel.setBackgroundColor(Color.parseColor(getString(R.color.Start_Ziel_pressed)));
                 Toast.makeText(getApplicationContext(), "Zielpunkt auf der Karte wählen!", Toast.LENGTH_LONG).show();
 
@@ -159,26 +172,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     @Override
                     public void onMapClick(LatLng target) {
-                        //Toast.makeText(getApplicationContext(), target.toString(), Toast.LENGTH_SHORT).show();
-                        //  String message = edt_start.getText().toString();
+                        if (ziel_input == false) {
+                            //Toast.makeText(getApplicationContext(), target.toString(), Toast.LENGTH_SHORT).show();
+                            //  String message = edt_start.getText().toString();
 
-                        //Log.d("TAG", message);
-                        Log.i("Zielpunkt", String.valueOf(target));
+                            Log.i("Zielpunkt", String.valueOf(target));
 
-                        // Übergabe an startPos
-                        OrsRequest.targetPos = target;
+                            // Übergabe an startPos
+                            OrsRequest.targetPos = target;
 
-                        // Ausgabe der Koordinaten für Textfeld
-                        TextView textView = findViewById(R.id.txt_target);
-                        textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.targetPos.latitude*100000)/100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.targetPos.longitude*100000)/100000.0));
+                            // Ausgabe der Koordinaten für Textfeld
+                            TextView textView = findViewById(R.id.txt_target);
+                            textView.setText("Latitude: " + String.valueOf(Math.round(OrsRequest.targetPos.latitude * 100000) / 100000.0) + "  Longitude: " + String.valueOf(Math.round(OrsRequest.targetPos.longitude * 100000) / 100000.0));
 
-                        if(OrsRequest.startPos != null) {
-                            btnZiel.setBackgroundColor(Color.parseColor(getString(R.color.Ziel_Button)));
-
+                            if (OrsRequest.targetPos != null) {
+                                btnZiel.setBackgroundColor(Color.parseColor(getString(R.color.Ziel_Button)));
+                                ziel_input = true;
+                            }
                         }
                     }
                 });
-
               }
         });
 
@@ -209,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             else {
                 Log.i("Else", "Start und Ziel Koordinaten wählen");
+                    Toast.makeText(getApplicationContext(), "Start und Ziel Koordinaten wählen", Toast.LENGTH_SHORT).show();
 
                 // Hier ein Pop-Up Window oder Ähnliches einfügen!
             }
