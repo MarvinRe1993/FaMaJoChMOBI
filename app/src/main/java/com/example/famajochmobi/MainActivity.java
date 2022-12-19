@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean ziel_input;
     boolean input;
 
+    //Definition Marker Start - Ziel
     Marker markerStart;
     Marker markerZiel;
 
@@ -436,9 +437,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             } else if (fileSize == 4000) {
                 return 40; // you can add more else if
             }
-            /* else {
-            return 100;
-            }*/
         }//end of while
         return 100;
     }//end of doOperation
