@@ -13,11 +13,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +29,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.data.Layer;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
@@ -55,6 +59,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean start_input;
     boolean ziel_input;
     boolean input;
+
+    Marker markerStart;
+    Marker markerZiel;
+
+    ProgressDialog progressBar;
+    private int progressBarStatus = 0;
+    private Handler progressBarHandler = new Handler();
+    private long fileSize = 0;
 
 
 
@@ -121,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                if (markerStart != null) markerStart.remove();
                 input = true;
                 start_input = false;
                 btnStart.setBackgroundColor(Color.parseColor(getString(R.color.Start_Ziel_pressed)));
@@ -148,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (OrsRequest.startPos != null) {
                                 btnStart.setBackgroundColor(Color.parseColor(getString(R.color.Start_Button)));
                                 start_input = true;
+                                markerStart = googleMap.addMarker(new MarkerOptions().position(OrsRequest.startPos).title("Start"));
                             }
                         }
                     }
@@ -162,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                if (markerZiel != null) markerZiel.remove();
+
                 input = true;
                 ziel_input = false;
                 btnZiel.setBackgroundColor(Color.parseColor(getString(R.color.Start_Ziel_pressed)));
@@ -188,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (OrsRequest.targetPos != null) {
                                 btnZiel.setBackgroundColor(Color.parseColor(getString(R.color.Ziel_Button)));
                                 ziel_input = true;
+                                markerZiel = googleMap.addMarker(new MarkerOptions().position(OrsRequest.targetPos).title("Ziel"));
                             }
                         }
                     }
@@ -215,6 +232,51 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new OrsRequest(profilCar, OrsRequest.startPos, OrsRequest.targetPos, this2);
                     new OrsRequest(profilWalking, OrsRequest.startPos, OrsRequest.targetPos, this2);
                     new OrsRequest(profilBike, OrsRequest.startPos, OrsRequest.targetPos, this2);
+
+                    // creating progress bar dialog
+                    progressBar = new ProgressDialog(view.getContext());
+                    progressBar.setCancelable(true);
+                    progressBar.setMessage("Route wird berechnet ...");
+                    progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    progressBar.setProgress(0);
+                    progressBar.setMax(100);
+                    progressBar.show();
+
+                    //reset progress bar and filesize status
+                    progressBarStatus = 0;
+                    fileSize = 0;
+
+                    new Thread(new Runnable() {
+                        public void run() {
+                            while (progressBarStatus < 100) {
+                                // performing operation
+                                progressBarStatus = doOperation();
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                // Updating the progress bar
+                                progressBarHandler.post(new Runnable() {
+                                    public void run() {
+                                        progressBar.setProgress(progressBarStatus);
+                                    }
+                                });
+                            }
+                            // performing operation if file is downloaded,
+                            if (progressBarStatus >= 100) {
+                                // sleeping for 1 second after operation completed
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                // close the progress bar dialog
+                                progressBar.dismiss();
+                            }
+                        }
+                    }).start();
+
 
 
                 }
@@ -360,7 +422,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
+    // checking how much file is downloaded and updating the file size
+    public int doOperation() {
+        //The range of ProgressDialog starts from 0 to 10000
+        while (fileSize <= 10000) {
+            fileSize++;
+            if (fileSize == 1000) {
+                return 10;
+            } else if (fileSize == 2000) {
+                return 20;
+            } else if (fileSize == 3000) {
+                return 30;
+            } else if (fileSize == 4000) {
+                return 40; // you can add more else if
+            }
+            /* else {
+            return 100;
+            }*/
+        }//end of while
+        return 100;
+    }//end of doOperation
 
 
 
