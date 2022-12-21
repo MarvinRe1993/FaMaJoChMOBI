@@ -359,6 +359,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             textView.setText("Info Auto\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
 
 
+         /*   if (bestLayerCar.isLayerOnMap()) {
+                bestLayerCar.removeFeature(shortest_feature);
+                bestLayerCar.removeLayerFromMap();
+                googleMap.clear();
+            }*/
 
             GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
             bestLayer.addFeature(shortest_feature);
@@ -367,7 +372,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             lineStringStyle.setColor(Color.RED);
             shortest_feature.setLineStringStyle(lineStringStyle);
 
+            Log.d("best Layer Car", String.valueOf(bestLayer.isLayerOnMap()));
             bestLayer.addLayerToMap();
+            Log.d("best Layer Car", String.valueOf(bestLayer.isLayerOnMap()));
         }
 
         else if(profile == profilBike) {
@@ -383,6 +390,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             lineStringStyle.setColor(Color.GREEN);
             shortest_feature.setLineStringStyle(lineStringStyle);
 
+            Log.d("best Layer Bike", String.valueOf(bestLayer));
             bestLayer.addLayerToMap();
         }
 
@@ -399,6 +407,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             lineStringStyle.setColor(Color.BLUE);
             shortest_feature.setLineStringStyle(lineStringStyle);
 
+            Log.d("best Layer Walk", String.valueOf(bestLayer));
             bestLayer.addLayerToMap();
         }
 
