@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     GoogleMap googleMap;
     String profilCar = "driving-car";
     String profilWalking = "foot-walking";
-    // cycling-regular gibt nicht immer 3 Routen zurück, deshalb cycling-road
+    //cycling-regular gibt nicht immer 3 Routen zurück, deshalb cycling-road
     //String profilBike = "cycling-regular";
     String profilBike = "cycling-road";
 
@@ -63,6 +63,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Definition Marker Start - Ziel
     Marker markerStart;
     Marker markerZiel;
+
+    GeoJsonLayer bestLayerCar = null;
+    GeoJsonLayer bestLayerBike = null;
+    GeoJsonLayer bestLayerWalk = null;
+
+    GeoJsonLayer layerCar = null;
+    GeoJsonLayer layerBike = null;
+    GeoJsonLayer layerWalk = null;
+
+
 
     ProgressDialog progressBar;
     private int progressBarStatus = 0;
@@ -125,8 +135,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button btnStart = this.findViewById(R.id.btn_start);
         Button btnZiel = this.findViewById(R.id.btn_ziel);
         Button btnSearch = this.findViewById(R.id.btn_search);
-
-
+        Button btnWalk = this.findViewById(R.id.btn_walk);
+        Button btnBike = this.findViewById(R.id.btn_fahrrad);
+        Button btnCar = this.findViewById(R.id.btn_car);
 
 
         // Klick auf Start Button
@@ -171,7 +182,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
         // Klick auf Ziel Button
         btnZiel.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceType")
@@ -214,11 +224,54 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
+        // Klick auf Walk Button
+        btnWalk.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
+            @Override
+            public void onClick(View view) {
+                Log.i("Button Walk", "Button Walk gedrückt");
+                btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
+                btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
+
+                removeLayer();
+
+                layerWalk.addLayerToMap();
+            }
+        });
+
+        // Klick auf Bike Button
+        btnBike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Button Bike", "Button Bike gedrückt");
+
+                removeLayer();
+
+                layerBike.addLayerToMap();
+            }
+        });
+
+        // Klick auf Car Button
+        btnCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Button Car", "Button Car gedrückt");
+
+                removeLayer();
+
+                layerCar.addLayerToMap();
+            }
+        });
+
+
+
+
         MainActivity this2 = this;
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                removeLayer();
 
                 if (OrsRequest.startPos != null && OrsRequest.targetPos != null) {
 
@@ -308,7 +361,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+
+
         GeoJsonLayer layer = new GeoJsonLayer(googleMap, response);
+
+        switch (profile) {
+            case "driving-car":
+                layerCar = layer;
+
+                break;
+
+            case "cycling-road":
+                layerBike = layer;
+
+                break;
+
+            case "foot-walking":
+                layerWalk = layer;
+
+                break;
+            default:
+                Log.d("Error:","Profil " + profile + " nicht wählbar");
+                break;
+
+        }
+
 
         //layer.addLayerToMap();
 
@@ -347,9 +424,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
 
                     Log.d("Summary " + profile, summary);
+                    Log.d("Shortest Distance " + profile, String.valueOf(shortest_distance));
                 }
         }
-        Log.d("Shortest Distance " + profile, String.valueOf(shortest_distance));
+
+
         //layer.addLayerToMap();
 
 
@@ -359,22 +438,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             textView.setText("Info Auto\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
 
 
-         /*   if (bestLayerCar.isLayerOnMap()) {
-                bestLayerCar.removeFeature(shortest_feature);
-                bestLayerCar.removeLayerFromMap();
-                googleMap.clear();
-            }*/
 
-            GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
-            bestLayer.addFeature(shortest_feature);
+            bestLayerCar = new GeoJsonLayer(googleMap, new JSONObject());
+            bestLayerCar.addFeature(shortest_feature);
 
             GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-            lineStringStyle.setColor(Color.RED);
+            lineStringStyle.setColor(getResources().getColor(R.color.Auto));
             shortest_feature.setLineStringStyle(lineStringStyle);
 
-            Log.d("best Layer Car", String.valueOf(bestLayer.isLayerOnMap()));
-            bestLayer.addLayerToMap();
-            Log.d("best Layer Car", String.valueOf(bestLayer.isLayerOnMap()));
+            Log.d("best Layer Car", String.valueOf(bestLayerCar.isLayerOnMap()));
+            bestLayerCar.addLayerToMap();
+            Log.d("best Layer Car", String.valueOf(bestLayerCar.isLayerOnMap()));
         }
 
         else if(profile == profilBike) {
@@ -383,15 +457,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-            GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
-            bestLayer.addFeature(shortest_feature);
+            bestLayerBike = new GeoJsonLayer(googleMap, new JSONObject());
+            bestLayerBike.addFeature(shortest_feature);
 
             GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-            lineStringStyle.setColor(Color.GREEN);
+            lineStringStyle.setColor(getResources().getColor(R.color.Fahrrad));
             shortest_feature.setLineStringStyle(lineStringStyle);
 
-            Log.d("best Layer Bike", String.valueOf(bestLayer));
-            bestLayer.addLayerToMap();
+            Log.d("best Layer Bike", String.valueOf(bestLayerBike));
+            bestLayerBike.addLayerToMap();
         }
 
         else if(profile == profilWalking) {
@@ -400,15 +474,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-            GeoJsonLayer bestLayer = new GeoJsonLayer(googleMap, new JSONObject());
-            bestLayer.addFeature(shortest_feature);
+            bestLayerWalk = new GeoJsonLayer(googleMap, new JSONObject());
+            bestLayerWalk.addFeature(shortest_feature);
 
             GeoJsonLineStringStyle lineStringStyle = new GeoJsonLineStringStyle();
-            lineStringStyle.setColor(Color.BLUE);
+            lineStringStyle.setColor(getResources().getColor(R.color.Fuß));
             shortest_feature.setLineStringStyle(lineStringStyle);
 
-            Log.d("best Layer Walk", String.valueOf(bestLayer));
-            bestLayer.addLayerToMap();
+            Log.d("best Layer Walk", String.valueOf(bestLayerWalk));
+            bestLayerWalk.addLayerToMap();
         }
 
 
@@ -419,9 +493,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void processOrsError(String profile, VolleyError error) {
         Log.i("processOrsError", error.toString());
+
+        String toastError = "Unbekannter Fehler";
+
         try {
-            Log.i("processOrsError", new String(error.networkResponse.data, "utf-8"));
+
+            String errorContent = new String(error.networkResponse.data, "utf-8");
+            Log.i("processOrsError", errorContent);
+
+            JSONObject errorJSON = new JSONObject(errorContent);
+
+            JSONObject errorJSON_temp = errorJSON.getJSONObject("error");
+            toastError = errorJSON_temp.getString("code");
+
+            Log.i("Toast Error Code", toastError);
+
+            switch(toastError) {
+                case "2004":
+                    Toast.makeText(getApplicationContext(), "Start und Ziel darf maximal 150 km voneinander entfernt sein", Toast.LENGTH_SHORT).show();
+                    break;
+               /* case "1000":
+
+                    break;*/
+                default:
+                    Toast.makeText(getApplicationContext(), toastError, Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -451,6 +553,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }//end of doOperation
 
 
+public void removeLayer(){
+    if(bestLayerCar != null) {
+        bestLayerCar.removeLayerFromMap();
+    }
+    if(bestLayerBike != null) {
+        bestLayerBike.removeLayerFromMap();
+    }
+    if(bestLayerWalk != null) {
+        bestLayerWalk.removeLayerFromMap();
+    }
+    if(layerCar != null) {
+        layerCar.removeLayerFromMap();
+    }
+    if(layerBike != null) {
+        layerBike.removeLayerFromMap();
+    }
+    if(layerWalk != null) {
+        layerWalk.removeLayerFromMap();
+    }
 
+}
 
 }
