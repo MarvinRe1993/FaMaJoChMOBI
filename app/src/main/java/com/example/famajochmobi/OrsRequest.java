@@ -83,11 +83,11 @@ private final String api_key = "5b3ce3597851110001cf6248f068288ba04e4c8983eb90aa
         JSONObject alternativeRoutesObject = new JSONObject();
         try {
 
-            alternativeRoutesObject.put("share_factor", 0.5);
+            alternativeRoutesObject.put("share_factor", 0.6);
 
             alternativeRoutesObject.put("target_count", 3);
 
-            alternativeRoutesObject.put("weight_factor", 1.4);
+            alternativeRoutesObject.put("weight_factor", 1.9);
 
         } catch (JSONException e) {
 

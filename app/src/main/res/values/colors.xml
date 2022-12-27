@@ -15,5 +15,7 @@
     <color name="Ziel_Button">#008000</color>
     <color name="Start_Ziel_pressed">#FF0000</color>
     <color name="Button_grey">#808080</color>
+    <color name="Button_pressed">#FF6666</color>
+    <color name="Button_white">#FFFFFFFF</color>
 
 </resources>

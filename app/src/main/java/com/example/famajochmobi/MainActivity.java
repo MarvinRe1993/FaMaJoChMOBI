@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     boolean start_input;
     boolean ziel_input;
     boolean input;
+    boolean car_pressed = false;
+    boolean bike_pressed = false;
+    boolean walk_pressed = false;
 
     //Definition Marker Start - Ziel
     Marker markerStart;
@@ -229,7 +232,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                if(walk_pressed == false){
+                    car_pressed = false;
+                    bike_pressed = false;
+                    walk_pressed = true;
                 Log.i("Button Walk", "Button Walk gedrückt");
+                //btnBike.setBackgroundColor(Color.parseColor(getString(R.color.white)));
+                btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.Button_pressed)));
+                //btnCar.setBackgroundColor(Color.parseColor(getString(R.color.white)));
+
+
                 btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
                 btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
 
@@ -237,39 +249,122 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 layerWalk.addLayerToMap();
             }
+
+                else if(walk_pressed == true) {
+                    car_pressed = false;
+                    bike_pressed = false;
+                    walk_pressed = false;
+                removeLayer();
+                bestLayerCar.addLayerToMap();
+                bestLayerBike.addLayerToMap();
+                bestLayerWalk.addLayerToMap();
+
+                btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+
+            }
+            }
         });
 
         // Klick auf Bike Button
         btnBike.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+                if(bike_pressed == false){
+                    car_pressed = false;
+                    bike_pressed = true;
+                    walk_pressed = false;
                 Log.i("Button Bike", "Button Bike gedrückt");
+                btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_pressed)));
+                //btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.white)));
+                //btnCar.setBackgroundColor(Color.parseColor(getString(R.color.white)));
+
+
+                btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
+                btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
 
                 removeLayer();
 
                 layerBike.addLayerToMap();
             }
+
+                else if(bike_pressed == true) {
+                    car_pressed = false;
+                    bike_pressed = false;
+                    walk_pressed = false;
+                removeLayer();
+                bestLayerCar.addLayerToMap();
+                bestLayerBike.addLayerToMap();
+                bestLayerWalk.addLayerToMap();
+
+                btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+
+            }
+
+            }
         });
 
         // Klick auf Car Button
         btnCar.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
-                Log.i("Button Car", "Button Car gedrückt");
+                if(car_pressed == false) {
+                    car_pressed = true;
+                    bike_pressed = false;
+                    walk_pressed = false;
+                    Log.i("Button Car", "Button Car gedrückt");
+                    //btnBike.setBackgroundColor(Color.parseColor(getString(R.color.white)));
+                    //btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.white)));
+                    btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_pressed)));
 
-                removeLayer();
 
-                layerCar.addLayerToMap();
+                    btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
+                    btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.Button_grey)));
+
+                    removeLayer();
+
+                    layerCar.addLayerToMap();
+                }
+
+                else if(car_pressed == true) {
+                    car_pressed = false;
+                    bike_pressed = false;
+                    walk_pressed = false;
+                    removeLayer();
+                    bestLayerCar.addLayerToMap();
+                    bestLayerBike.addLayerToMap();
+                    bestLayerWalk.addLayerToMap();
+
+                    btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                    btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                    btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+
+                }
             }
         });
 
 
-
-
+        // Klick auf Button suche Starten
         MainActivity this2 = this;
         btnSearch.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onClick(View view) {
+
+                TextView textView1 = findViewById(R.id.txt_fahrrad);
+                textView1.setText("Info Fahrrad");
+                TextView textView2 = findViewById(R.id.txt_walk);
+                textView2.setText("Info Fußgänger");
+                TextView textView3 = findViewById(R.id.txt_car);
+                textView3.setText("Info Auto");
+                btnCar.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                btnBike.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
+                btnWalk.setBackgroundColor(Color.parseColor(getString(R.color.Button_white)));
 
                 removeLayer();
 
@@ -435,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if(profile == profilCar) {
             TextView textView = findViewById(R.id.txt_car);
-            textView.setText("Info Auto\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
+            textView.setText("Info Auto\n\n" + "Länge: " + String.valueOf(Math.round(shortest_distance/100.0)/10.0) + " km\n\n" + "Dauer: " + String.valueOf(Math.round(duration_shortest_distance/6.0)/10.0) + " min");
 
 
 
@@ -453,7 +548,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         else if(profile == profilBike) {
             TextView textView = findViewById(R.id.txt_fahrrad);
-            textView.setText("Info Fahrrad\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
+            textView.setText("Info Fahrrad\n\n" + "Länge: " + String.valueOf(Math.round(shortest_distance/100.0)/10.0) + " km\n\n" + "Dauer: " + String.valueOf(Math.round(duration_shortest_distance/6.0)/10.0) + " min");
 
 
 
@@ -470,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         else if(profile == profilWalking) {
             TextView textView = findViewById(R.id.txt_walk);
-            textView.setText("Info Fußgänger\n\n" + "Länge: " + String.valueOf(shortest_distance) + " m\n\n" + "Dauer: " + String.valueOf(duration_shortest_distance) + " min");
+            textView.setText("Info Fußgänger\n\n" + "Länge: " + String.valueOf(Math.round(shortest_distance/100.0)/10.0) + " km\n\n" + "Dauer: " + String.valueOf(Math.round(duration_shortest_distance/6.0)/10.0) + " min");
 
 
 
@@ -510,7 +605,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             switch(toastError) {
                 case "2004":
-                    Toast.makeText(getApplicationContext(), "Start und Ziel darf maximal 150 km voneinander entfernt sein", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Start- und Zielpunkt dürfen maximal 150 km voneinander entfernt sein!", Toast.LENGTH_SHORT).show();
                     break;
                /* case "1000":
 
@@ -572,7 +667,6 @@ public void removeLayer(){
     if(layerWalk != null) {
         layerWalk.removeLayerFromMap();
     }
-
 }
 
 }
