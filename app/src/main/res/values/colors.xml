@@ -13,5 +13,6 @@
     <color name="Suche_Button">#008000</color>
     <color name="Start_Button">#008000</color>
     <color name="Ziel_Button">#008000</color>
+    <color name="App_Farbe">#008800</color>
 
 </resources>
