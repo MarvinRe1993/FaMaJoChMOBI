@@ -17,5 +17,6 @@
     <color name="Button_grey">#808080</color>
     <color name="Button_pressed">#FF6666</color>
     <color name="Button_white">#FFFFFFFF</color>
+    <color name="App_Farbe">#008800</color>
 
 </resources>
