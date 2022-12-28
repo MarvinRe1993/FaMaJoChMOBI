@@ -107,11 +107,11 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/walk"
+                android:id="@+id/btn_walk"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="top"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/Button_white"
                 android:drawableBottom="@drawable/ic_walk" />
 
             <TextView
@@ -138,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="top"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/Button_white"
                 android:drawableBottom="@drawable/ic_fahrrad" />
 
             <TextView
@@ -165,7 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="top"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/Button_white"
                 android:drawableBottom="@drawable/ic_car" />
 
             <TextView
